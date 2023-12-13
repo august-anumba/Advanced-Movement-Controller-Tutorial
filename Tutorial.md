@@ -18,7 +18,15 @@ We also need to add Keybind/KeyCodes to control our new advanced movements like 
     public KeyCode sprintKey = KeyCode.LeftShift;
     public KeyCode crouchKey = KeyCode.LeftControl;
 ```
+To effectivly allow the player to transition from walking, sprinting, crouching as well as being in the air, it is simpler to manage it using movement states for the character for each state they could be in:
 
+![image](https://github.com/august-anumba/Advanced-Movement-Controller-Tutorial/assets/146851823/049a5e4e-ed69-4e84-99a4-1406c9868c62)
+
+To create these states we use a `public enum` called `MovementState`. Inside this newly create enum we We use the following code to program this
+
+```.cs
+
+```
 
 
 
