@@ -119,4 +119,8 @@ To now stop crouching the player will need to release the crouch key which it cu
         }
 ```
 
-However we want the player to be slowed while crouching
+We now go into unity and set all our variables and speed to appropriate values. These are the ones I used:
+
+![image](https://github.com/august-anumba/Advanced-Movement-Controller-Tutorial/assets/146851823/b06f8018-48ee-4862-9922-f59b270ecabc)
+
+You can now test the scene you have built yourself, or by running the `demo` scene provided.
