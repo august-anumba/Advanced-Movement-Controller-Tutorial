@@ -12,10 +12,16 @@ public class PlayerMovement : MonoBehaviour
 
     public float groundDrag;
 
+    [Header("Jumping")]
     public float jumpForce;
     public float jumpCooldown;
     public float airMultiplier;
     bool readyToJump;
+
+    [Header("Crouching")]
+    public float crouchSpeed;
+    public float crouchYScale;
+    private float startYScale;
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
@@ -36,12 +42,22 @@ public class PlayerMovement : MonoBehaviour
 
     Rigidbody rb;
 
+    public MovementState state;
+    public enum MovementState
+    {
+        walking,
+        sprinting,
+        crouching,
+        air
+    }
 
     private void Start()
     {
         readyToJump = true;
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+
+        startYScale = transform.localScale.y;
     }
 
     private void Update()
@@ -50,6 +66,7 @@ public class PlayerMovement : MonoBehaviour
 
         MyInput();
         SpeedControl();
+        StateHandler();
 
         if (grounded)
             rb.drag = groundDrag;
@@ -75,6 +92,47 @@ public class PlayerMovement : MonoBehaviour
             Jump();
 
             Invoke(nameof(ResetJump), jumpCooldown);
+        }
+
+        if (Input.GetKeyDown(crouchKey))
+        {
+            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+            rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+        }
+
+        if (Input.GetKeyUp(crouchKey))
+        {
+            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+        }
+    }
+
+    private void StateHandler()
+    {
+        // Mode - Crouching
+        if (Input.GetKey(crouchKey))
+        {
+            state = MovementState.crouching;
+            moveSpeed = crouchSpeed;
+        }
+
+        // Mode - Sprinting
+        else if (grounded && Input.GetKey(sprintKey))
+        {
+            state = MovementState.sprinting;
+            moveSpeed = sprintSpeed;
+        }
+
+        // Mode - Walking
+        else if (grounded && !Input.GetKey(crouchKey))
+        {
+            state = MovementState.walking;
+            moveSpeed = walkSpeed;
+        }
+
+        // Mode - Air
+        else
+        {
+            state = MovementState.air;
         }
     }
 
